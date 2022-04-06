@@ -150,8 +150,6 @@
 
 
         <!-- Remainder part -->
-
-
         <div class="col-3 p-0">
             <div class="vr"></div>
             <table class="table">
