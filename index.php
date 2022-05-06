@@ -91,7 +91,7 @@
 
                         <nav class="nav nav-pills nav-justified d-flex">
                             <a class="nav-link active" href="#">Dashboard</a>
-                            <a class="nav-link" href="#">Summary</a>
+                            <a class="nav-link" href="./pages/summary.php">Summary</a>
                         </nav>
                     </div>
 
