@@ -1,5 +1,5 @@
 <?php
-require_once("../database/Auth.php");
+require_once("../database/Auth.class.php");
 if (isset($_POST["submit"])) {
     $username = $_POST["username"];
     $email = $_POST["email"];
@@ -7,7 +7,7 @@ if (isset($_POST["submit"])) {
 
     // creating connection
     $auth = new Auth($username, $email, $password);
-    $auth->signUp();
+    // $auth->signUp();
 }
 ?>
 
@@ -33,9 +33,9 @@ if (isset($_POST["submit"])) {
                     <div class="card border-0 shadow">
                         <div class="card-body bg-light">
                             <div class="text-center">
-                                <P>
+
                                 <h4 class="text-success mt-1 pt-2">Create Account</h4>
-                                </P>
+
                                 <img src="../assets/logo.png" style="width: 150px" alt="logo" class="mt-2 border border-3 border-primary rounded-circle">
                             </div>
                             <div>

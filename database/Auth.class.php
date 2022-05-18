@@ -13,9 +13,11 @@ class Auth {
     private $conn;
 
     public function __construct($username, $email, $password) {
+
+        // Assigning value to private variable so that it can be later use
         $this->username = $username;
         $this->email = $email;
-        $this->password = $password;
+        $this->password = $password; //TODO: Need to hash password before 
 
         // Create connection
         $this->conn = new mysqli("localhost", "root", "");
@@ -26,13 +28,14 @@ class Auth {
         }
     }
 
-    //magic functions
+    //magic functions: used to set value to any class variable
     public function _set($property, $value) {
         if (property_exists($this, $property)) {
             $this->property = $value;
         }
     }
 
+    // magic functions: used to get value from defined class variable
     public function _get($property) {
         if (property_exists($this, $property)) {
             return $this->property;
@@ -41,6 +44,7 @@ class Auth {
     }
 
 
+    // checking if the user had previously logged in with the provided email
     private function checkIfPreviouslySignUp($email) {
 
         $statement = "SELECT * FROM PEMS.User 
@@ -56,10 +60,11 @@ class Auth {
     }
 
 
-
+    // Handles signIn action
     public function signIn() {
     }
 
+    // Handlies sign up action
     public function signUp() {
         $ifHasAccount = $this->checkIfPreviouslySignUp($this->email);
 
@@ -78,9 +83,8 @@ class Auth {
                 header("Location: ../index.php");
             }
         } else {
-            header("Location: signin.php");
-            echo "You already have an account. Please log In.";
             $this->conn->close();
+            header("Location: signin.php");
         }
     }
 
