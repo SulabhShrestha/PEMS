@@ -1,13 +1,17 @@
 <?php
 
+/**
+ * This returns a card component
+ */
+class Card {
 
-function getCard($name)
-{
-    return <<<HTML
+    function getCard($name) {
+        return <<<HTML
             <div class="card w-50">
                 <div class="card-body">
                     <h5 class="card-title">$name</h5>
                 </div>
             </div>
-        HTML;
+            HTML;
+    }
 }
