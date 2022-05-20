@@ -1,3 +1,17 @@
+<?php
+require_once("../database/Auth.class.php");
+if (isset($_POST["submit"])) {
+
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+
+    // creating connection
+    $auth = new Auth('', $email, $password);
+
+    $auth->signIn();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,13 +43,15 @@
                                 <P class="mt-3"><em>Please enter your login details.</em></P>
                             </div>
 
-                            <form action="">
+                            <form action="" method="POST">
                                 <input type="text" name="email" id="email" class="form-control my-4 py-2" placeholder="Email" />
                                 <input type="text" name="password" id="oassword" class="form-control my-4 py-2" placeholder="Password" />
                                 <div class="text-center">
-                                    <button class="btn btn-primary mt-5">Login</button>
-                                    <p class="mb-4 mt-4">Don't have an account? <a href="signup.php" class="link-primary">Sign Up
-                                        </a></p>
+                                    <input type="submit" class="btn btn-primary" value="submit" name="submit">
+                                    <p class="mb-4 mt-4">Don't have an account?
+                                        <a href="signup.php" class="link-primary">Sign Up
+                                        </a>
+                                    </p>
                                 </div>
                             </form>
                         </div>

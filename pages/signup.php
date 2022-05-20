@@ -7,7 +7,7 @@ if (isset($_POST["submit"])) {
 
     // creating connection
     $auth = new Auth($username, $email, $password);
-    // $auth->signUp();
+    $auth->signUp();
 }
 ?>
 
@@ -48,7 +48,7 @@ if (isset($_POST["submit"])) {
                                 <div class="text-center mt-3">
                                     <input type="submit" class="btn btn-primary" value="submit" name="submit">
 
-                                    <p class="mb-3 mt-3">Already have an account? <a href="#" class="link-primary">Login
+                                    <p class="mb-3 mt-3">Already have an account? <a href="signin.php" class="link-primary">Login
                                         </a></p>
                                 </div>
                             </form>

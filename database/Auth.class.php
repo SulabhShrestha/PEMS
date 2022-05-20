@@ -45,10 +45,10 @@ class Auth {
 
 
     // checking if the user had previously logged in with the provided email
-    private function checkIfPreviouslySignUp($email) {
+    private function checkIfPreviouslyEmailExist() {
 
         $statement = "SELECT * FROM PEMS.User 
-        WHERE email='$email'";
+        WHERE email='$this->email'";
 
         $result = $this->conn->query($statement);
 
@@ -59,14 +59,34 @@ class Auth {
         return false;
     }
 
+    // checking if the provided email and password matches 
+    public function checkForValidCredentail() {
+        $email = $this->email;
+        $password = $this->password;
+
+        $sqlStatement = "SELECT * FROM PEMS.User 
+        WHERE email = '$email' AND password = '$password'";
+
+        $result = $this->conn->query($sqlStatement);
+
+
+
+        print_r($result);
+        if ($result->num_rows > 0) {
+            $this->conn->close();
+            header("Location: ../index.php");
+        }
+    }
 
     // Handles signIn action
     public function signIn() {
+        $this->checkForValidCredentail();
     }
+
 
     // Handlies sign up action
     public function signUp() {
-        $ifHasAccount = $this->checkIfPreviouslySignUp($this->email);
+        $ifHasAccount = $this->checkIfPreviouslyEmailExist();
 
         if (!$ifHasAccount) {
             $sqlStatement = "INSERT INTO PEMS.User(email, username, password) VALUES(?, ?, ?)";
@@ -75,8 +95,6 @@ class Auth {
             $sqlQuery = $this->conn->prepare($sqlStatement);
 
             $result = $sqlQuery->execute([$this->email, $this->username, $this->password]);
-
-            print_r($sqlQuery);
 
             if ($result) {
                 $this->conn->close();
