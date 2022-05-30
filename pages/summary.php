@@ -16,7 +16,6 @@
     <!-- Google fonts -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-
     <style>
         .height-css {
             height: 12vh;

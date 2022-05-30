@@ -13,6 +13,8 @@ class Auth {
     private $conn;
 
     public function __construct($username, $email, $password) {
+        // starting session
+        session_start();
 
         // Assigning value to private variable so that it can be later use
         $this->username = $username;
@@ -61,6 +63,10 @@ class Auth {
 
     // checking if the provided email and password matches 
     public function checkForValidCredentail() {
+    }
+
+    // Handles signIn action
+    public function signIn() {
         $email = $this->email;
         $password = $this->password;
 
@@ -74,13 +80,10 @@ class Auth {
         print_r($result);
         if ($result->num_rows > 0) {
             $this->conn->close();
+
+            $_SESSION["login"] = true; // user is logged in now
             header("Location: ../index.php");
         }
-    }
-
-    // Handles signIn action
-    public function signIn() {
-        $this->checkForValidCredentail();
     }
 
 
@@ -96,8 +99,10 @@ class Auth {
 
             $result = $sqlQuery->execute([$this->email, $this->username, $this->password]);
 
+            // redirecting user to index.php
             if ($result) {
                 $this->conn->close();
+                $_SESSION["login"] = true; // user is logged in now
                 header("Location: ../index.php");
             }
         } else {

@@ -1,5 +1,6 @@
 <?php
 require_once("../database/Auth.class.php");
+
 if (isset($_POST["submit"])) {
 
     $email = $_POST["email"];

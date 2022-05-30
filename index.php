@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+if ($_SESSION["login"] != 1) {
+    header("Location: /PEMS/pages/signin.php");
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -121,7 +131,7 @@
                     <tr>
                         <td>
 
-                            <button type="button" class="btn btn-outline-primary mb-4 dotted-border-3">Primary</button>
+                            <button type="button" class="btn btn-outline-primary mb-4 dotted-border-3">Add</button>
 
 
                             <div class="card mb-4">
