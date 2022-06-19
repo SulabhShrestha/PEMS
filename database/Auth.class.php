@@ -75,23 +75,27 @@ class Auth {
 
         $result = $this->conn->query($sqlStatement);
 
-
-
-        print_r($result);
         if ($result->num_rows > 0) {
             $this->conn->close();
 
             $_SESSION["login"] = true; // user is logged in now
+            $_SESSION["email"] = $email;
+            $_SESSION["username"] = $this->username;
+
             header("Location: ../index.php");
+        }
+        // Displaying wrong email or password 
+        else {
+            header("Location: signin.php?error=Wrong email or password");
         }
     }
 
 
     // Handlies sign up action
     public function signUp() {
-        $ifHasAccount = $this->checkIfPreviouslyEmailExist();
+        $hasAccount = $this->checkIfPreviouslyEmailExist();
 
-        if (!$ifHasAccount) {
+        if (!$hasAccount) {
             $sqlStatement = "INSERT INTO PEMS.User(email, username, password) VALUES(?, ?, ?)";
 
             // This is to prevent SQLi
@@ -99,18 +103,18 @@ class Auth {
 
             $result = $sqlQuery->execute([$this->email, $this->username, $this->password]);
 
+
             // redirecting user to index.php
             if ($result) {
                 $this->conn->close();
                 $_SESSION["login"] = true; // user is logged in now
+                $_SESSION["email"] = $this->email;
+                $_SESSION["username"] = $this->username;
                 header("Location: ../index.php");
             }
         } else {
             $this->conn->close();
-            header("Location: signin.php");
+            header("Location: signup.php?error=You already have an account associated with that email. Please login.");
         }
-    }
-
-    public function signOut() {
     }
 }
