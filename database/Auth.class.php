@@ -2,7 +2,9 @@
 
 /**
  * This handles all authentication activities
- * including SignIn, SignUp, SignOut
+ * including SignIn, SignUp only
+ * 
+ * Sign out is handled by logout.php
  */
 
 class Auth {
@@ -13,8 +15,6 @@ class Auth {
     private $conn;
 
     public function __construct($username, $email, $password) {
-        // starting session
-        session_start();
 
         // Assigning value to private variable so that it can be later use
         $this->username = $username;
@@ -74,13 +74,16 @@ class Auth {
         WHERE email = '$email' AND password = '$password'";
 
         $result = $this->conn->query($sqlStatement);
+        $this->conn->close();
 
         if ($result->num_rows > 0) {
-            $this->conn->close();
+
+            $resultArray = $result->fetch_assoc();
 
             $_SESSION["login"] = true; // user is logged in now
             $_SESSION["email"] = $email;
-            $_SESSION["username"] = $this->username;
+            $_SESSION["username"] = $resultArray["username"];
+            $_SESSION["uid"] = $resultArray["id"];
 
             header("Location: ../index.php");
         }
