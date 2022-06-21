@@ -26,9 +26,9 @@ class Expense {
     }
 
     public function fetch($uid) {
-        $sql = "SELECT name, amount FROM Expense WHERE uid = $uid";
+        $sql = "SELECT name, amount FROM Expense WHERE uid = $uid AND date = CURRENT_DATE";
         $result = $this->conn->query($sql);
 
-        return $result;
+        return $result->fetch_all();
     }
 }

@@ -3,6 +3,7 @@ session_start();
 
 require_once("./components/add_expenses.php");
 require_once("database/Expense.class.php");
+require_once("components/expense_items.php");
 
 
 if (!isset($_SESSION["login"])) {
@@ -10,6 +11,7 @@ if (!isset($_SESSION["login"])) {
 }
 
 $expense = new Expense();
+$expenses = $expense->fetch($_SESSION['uid']);
 
 ?>
 
@@ -142,21 +144,14 @@ $expense = new Expense();
                                 Add
                             </button>
 
-                            <div class="card mb-4">
-                                <div class="card-body d-flex justify-content-between">
-                                    <div class="left-side d-flex align-items-center">
+                            <?php
+                            $expCard = new ExpenseCard();
 
-                                        <span class="material-icons">paid</span>
-                                        <span class="title px-2">Restaurant & Lodge</span>
-                                    </div>
+                            foreach ($expenses as $exp) {
+                                $expCard->get($exp[0], $exp[1]);
+                            }
 
-                                    <div class="right-side d-flex align-items-center">
-                                        <span class="amount">Rs 5000</span>
-                                        <span class="material-icons px-2">edit</span>
-                                        <span class="material-icons">delete</span>
-                                    </div>
-                                </div>
-                            </div>
+                            ?>
 
                         </td>
 
