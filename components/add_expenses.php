@@ -13,7 +13,7 @@
 
                     <input type="text" class="form-control" placeholder="Expense name" name="expenseName">
 
-                    <input type="text" class="form-control mt-2" placeholder="Amount" name="expenseAmount">
+                    <input type="text" class="form-control mt-2" placeholder="Amount" name="expenseAmount" autocomplete="off">
 
                 </div>
                 <div class="modal-footer">
@@ -34,8 +34,8 @@ if (isset($_POST["add-exp"])) {
     $uid = $_SESSION['uid'];
 
     if ($empName !== "" && $expAmount !== "") {
-        $expense = new Expense();
-        $expense->add($uid, $expName, $expAmount);
+        $expense = new Expense($uid);
+        $expense->add($expName, $expAmount);
     }
 
     header("Location: index.php");

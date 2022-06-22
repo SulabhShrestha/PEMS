@@ -10,8 +10,8 @@ if (!isset($_SESSION["login"])) {
     header("Location: /PEMS/pages/signin.php");
 }
 
-$expense = new Expense();
-$expenses = $expense->fetch($_SESSION['uid']);
+$expense = new Expense($_SESSION['uid']);
+$expenses = $expense->fetch();
 
 ?>
 
@@ -90,8 +90,10 @@ $expenses = $expense->fetch($_SESSION['uid']);
     <div class="row m-0">
 
         <!-- Content part -->
-        <div class="col-9 p-0 content">
+        <div class="p-0 ">
             <table class="table">
+
+                <!-- nav part -->
                 <thead>
 
                     <div class="d-flex justify-content-between align-items-center px-1 py-2">
@@ -112,27 +114,43 @@ $expenses = $expense->fetch($_SESSION['uid']);
                             <a class="nav-link active" href="#">Dashboard</a>
                             <a class="nav-link" href="./pages/summary.php">Summary</a>
                         </nav>
+                        <a href="/PEMS/database/logout.php"><span class="material-icons">face</span></a>
                     </div>
 
                 </thead>
                 <tbody>
+
+                    <!-- further other information -->
                     <tr>
                         <td class="d-flex justify-content-between align-items-center">
 
                             <div class="date">
                                 <span class="label">Today's date:</span>
-                                <span class="today">March 15, 2022</span>
+                                <?php
+                                echo '<span class="today">' . date("Y-m-d") . '</span>';
+                                ?>
+
                             </div>
 
                             <div class="today-exp-infos">
                                 <div class="total-activity">
                                     <span class="desc">Total activity:</span>
-                                    <span class="activity">2</span>
+                                    <?php
+
+                                    // Total number of activity is returned
+                                    $totalActivity = $expense->todayTotalActivity();
+                                    echo '<span class="activity">' . $totalActivity . '</span>';
+                                    ?>
                                 </div>
 
                                 <div class="total-amount">
-                                    <span class="desc">Total activity:</span>
-                                    <span class="amount">Rs. 2000</span>
+
+                                    <span class="desc">Total amount:</span>
+                                    <?php
+                                    $totalExpenses = $expense->todayTotalExpensesAmount();
+
+                                    echo '<span class="amount"> Rs ' . $totalExpenses . '</span>';
+                                    ?>
                                 </div>
                             </div>
                         </td>
@@ -162,49 +180,9 @@ $expenses = $expense->fetch($_SESSION['uid']);
         </div>
 
 
-        <!-- Remainder part -->
-        <div class="col-3 p-0">
-            <div class="vr"></div>
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td class="p-1" colspan="2">
-                            <div class="d-flex justify-content-between py-2">
-                                <span class="material-icons">
-                                    notifications
-                                </span>
 
-                                <a href="/PEMS/database/logout.php"><span class="material-icons">face</span></a>
-                            </div>
-                        </td>
-
-                    </tr>
-
-                    <tr>
-                        <td>
-
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <span>Remainder</span>
-                                <span><button type="button" class="btn btn-outline-primary dotted-border-2 px-2 py-1 fs-1">+</button></span>
-                            </div>
-
-                            <div class="card mb-4 remainder">
-                                <div class="card-body d-flex justify-content-between align-items-center px-2 py-2">
-
-                                    <div class="left-side">
-                                        <h3>Home Loan</h3>
-                                        <p class="m-0">5 days left</p>
-                                    </div>
-
-                                    <div class="right-side">
-                                        <p>Rs 50000</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-            </table>
-        </div>
+        </table>
+    </div>
     </div>
 
 
