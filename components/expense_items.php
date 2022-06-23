@@ -19,7 +19,10 @@ class ExpenseCard {
                     <div class="right-side d-flex align-items-center">
                         <span class="amount">Rs $amt</span>
                         <span class="material-icons px-2">edit</span>
-                        <span class="material-icons">delete</span>
+                        <a href="utils/delete_expense.php?name=$name">
+
+                            <span class="material-icons delete-logo">delete</span>
+                        </a>
                     </div>
                 </div>
             </div>

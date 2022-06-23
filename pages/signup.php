@@ -11,6 +11,7 @@ if (isset($_POST["submit"])) {
 
     else {
         // creating connection
+        session_start();
         $auth = new Auth($username, $email, $password);
         $auth->signUp();
     }

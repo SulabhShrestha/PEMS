@@ -105,11 +105,10 @@ class Auth {
             $sqlQuery = $this->conn->prepare($sqlStatement);
 
             $result = $sqlQuery->execute([$this->email, $this->username, $this->password]);
-
+            $this->conn->close();
 
             // redirecting user to index.php
             if ($result) {
-                $this->conn->close();
                 $_SESSION["login"] = true; // user is logged in now
                 $_SESSION["email"] = $this->email;
                 $_SESSION["username"] = $this->username;

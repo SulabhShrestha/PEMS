@@ -5,9 +5,18 @@ require_once("./components/add_expenses.php");
 require_once("database/Expense.class.php");
 require_once("components/expense_items.php");
 
-
 if (!isset($_SESSION["login"])) {
     header("Location: /PEMS/pages/signin.php");
+}
+
+if (!isset($_SESSION["uid"])) {
+    $email = $_SESSION['email'];
+    $sql = "SELECT id FROM User WHERE email='$email'";
+
+    $conn = new mysqli("localhost", "root", "", "PEMS");
+    $result = $conn->query($sql);
+
+    $_SESSION['uid'] = $result->fetch_assoc()["id"];
 }
 
 $expense = new Expense($_SESSION['uid']);
@@ -34,53 +43,13 @@ $expenses = $expense->fetch();
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
-        html,
-        body,
-        body>div.row {
-            height: 100% !important;
-        }
-
         .content {
             height: 100%;
             border-right: 1px solid black;
         }
 
-        .borderless tr {
-            border: none !important;
-        }
-
-        div>.vr {
-            position: absolute;
-
-            background-color: black;
-            width: 1px;
-
-            height: 100%;
-        }
-
-        .dotted-border-3 {
-            border-style: dotted;
-            border-width: 3px;
-            border-radius: 16px;
-        }
-
-        .dotted-border-2 {
-            border-style: dotted;
-            border-width: 2px;
-            border-radius: 8px;
-        }
-
-        .remainder .left-side>p {
-            font-size: small;
-            opacity: 0.5;
-        }
-
-        .remainder .left-side>h3 {
-            font-size: larger;
-        }
-
-        .remainder .right-side>p {
-            font-size: medium;
+        .delete-logo {
+            color: red;
         }
     </style>
 </head>
@@ -114,7 +83,7 @@ $expenses = $expense->fetch();
                             <a class="nav-link active" href="#">Dashboard</a>
                             <a class="nav-link" href="./pages/summary.php">Summary</a>
                         </nav>
-                        <a href="/PEMS/database/logout.php"><span class="material-icons">face</span></a>
+                        <a href="/PEMS/utils/logout.php"><span class="material-icons">face</span></a>
                     </div>
 
                 </thead>
@@ -147,7 +116,9 @@ $expenses = $expense->fetch();
 
                                     <span class="desc">Total amount:</span>
                                     <?php
-                                    $totalExpenses = $expense->todayTotalExpensesAmount();
+
+                                    // Either 0 or total expenses amount
+                                    $totalExpenses = $expense->todayTotalExpensesAmount() ?? 0;
 
                                     echo '<span class="amount"> Rs ' . $totalExpenses . '</span>';
                                     ?>

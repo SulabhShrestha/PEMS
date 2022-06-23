@@ -22,12 +22,14 @@ class Expense {
         $this->conn->close();
     }
 
+    // add new expense to the db
     public function add($expName, $amount) {
         $sql = "INSERT INTO Expense(uid, name, amount) VALUES($this->uid, '$expName', $amount)";
 
         $this->conn->query($sql);
     }
 
+    // fetch all the expense of the specific user of today only
     public function fetch() {
         $sql = "SELECT name, amount FROM Expense WHERE uid = $this->uid AND date = CURRENT_DATE";
         $result = $this->conn->query($sql);
@@ -49,5 +51,14 @@ class Expense {
         $result = $this->conn->query($sql);
 
         return $result->fetch_assoc()["sum(amount)"];
+    }
+
+    // Delete the expense of the user of today's date
+    public function deleteExpense($expName) {
+        $sql = "DELETE FROM Expense WHERE uid = $this->uid AND name = '$expName' AND date = CURRENT_DATE";
+
+        $this->conn->query($sql);
+
+        header("Location: /PEMS/index.php");
     }
 }
