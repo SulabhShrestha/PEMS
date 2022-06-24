@@ -1,9 +1,12 @@
+<!DOCTYPE html>
+
 <?php
 session_start();
 
 require_once("./components/add_expenses.php");
 require_once("database/Expense.class.php");
 require_once("components/expense_items.php");
+require_once("components/update_expense.php");
 
 if (!isset($_SESSION["login"])) {
     header("Location: /PEMS/pages/signin.php");
@@ -25,7 +28,6 @@ $expenses = $expense->fetch();
 ?>
 
 
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -43,13 +45,13 @@ $expenses = $expense->fetch();
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
-        .content {
-            height: 100%;
-            border-right: 1px solid black;
-        }
-
         .delete-logo {
             color: red;
+        }
+
+        .editBtn {
+            cursor: pointer;
+            color: green;
         }
     </style>
 </head>
@@ -137,7 +139,7 @@ $expenses = $expense->fetch();
                             $expCard = new ExpenseCard();
 
                             foreach ($expenses as $exp) {
-                                $expCard->get($exp[0], $exp[1]);
+                                $expCard->get($exp[0], $exp[1], $exp[2]);
                             }
 
                             ?>
@@ -164,6 +166,36 @@ $expenses = $expense->fetch();
 
     <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
 
+    <script>
+        // Adding data to modal while updating
+        $(document).ready(function() {
+
+            $(".editBtn").on("click", function() {
+
+                // Showing update modal on click of edit btn
+                $("#updateModal").modal('show');
+
+                // getting eid only in array
+                let eid = $(this).closest(".expense-data-holder").find(".eid").map(function() {
+                    return this.value;
+                }).get();
+
+                // gets array of [expname, amnt]
+                let values = $(this).closest(".expense-data-holder").find(".data").map(
+                    function() {
+                        return this.textContent;
+                    }
+                ).get();
+
+                // setting value
+                $("#eid").val(eid[0]);
+                $(".expName").val(values[0]);
+
+                // don't want Rs to be inserted
+                $(".expAmount").val(values[1].split(" ")[1]);
+            });
+        });
+    </script>
 
 </body>
 

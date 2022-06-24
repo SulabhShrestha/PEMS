@@ -31,7 +31,7 @@ class Expense {
 
     // fetch all the expense of the specific user of today only
     public function fetch() {
-        $sql = "SELECT name, amount FROM Expense WHERE uid = $this->uid AND date = CURRENT_DATE";
+        $sql = "SELECT eid, name, amount FROM Expense WHERE uid = $this->uid AND date = CURRENT_DATE";
         $result = $this->conn->query($sql);
 
         return $result->fetch_all();
@@ -57,6 +57,15 @@ class Expense {
     public function deleteExpense($expName) {
         $sql = "DELETE FROM Expense WHERE uid = $this->uid AND name = '$expName' AND date = CURRENT_DATE";
 
+        $this->conn->query($sql);
+
+        header("Location: /PEMS/index.php");
+    }
+
+    // Update the expense of the user of today's date
+    public function update($eid, $expName, $expAmount) {
+
+        $sql = "UPDATE Expense set name = '$expName', amount = $expAmount WHERE eid = $eid";
         $this->conn->query($sql);
 
         header("Location: /PEMS/index.php");

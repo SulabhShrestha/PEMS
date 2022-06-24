@@ -5,22 +5,27 @@
  */
 class ExpenseCard {
 
-    function get($name, $amt) {
+    function get($eid, $name, $amt) {
 
         echo <<<HTML
-            <div class="card mb-4">
-                <div class="card-body d-flex justify-content-between">
+            <div class="card mb-4 ">
+                <div class="card-body d-flex justify-content-between expense-data-holder">
                     <div class="left-side d-flex align-items-center">
 
+                        <input type="hidden" class="eid" value=$eid>
+
                         <span class="material-icons">paid</span>
-                        <span class="title px-2">$name</span>
+                        <span class="title px-2 data">$name</span>
                     </div>
 
                     <div class="right-side d-flex align-items-center">
-                        <span class="amount">Rs $amt</span>
-                        <span class="material-icons px-2">edit</span>
-                        <a href="utils/delete_expense.php?name=$name">
+                        <span class="amount data">Rs $amt</span>
+                        
+                        
+                        <span class="material-icons px-2 editBtn" >edit</span>
+                        
 
+                        <a href="utils/delete_expense.php?name=$name">
                             <span class="material-icons delete-logo">delete</span>
                         </a>
                     </div>
