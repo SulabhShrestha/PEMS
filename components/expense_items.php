@@ -25,7 +25,7 @@ class ExpenseCard {
                         <span class="material-icons px-2 editBtn" >edit</span>
                         
 
-                        <a href="utils/delete_expense.php?name=$name">
+                        <a href="utils/delete_expense.php?eid=$eid">
                             <span class="material-icons delete-logo">delete</span>
                         </a>
                     </div>

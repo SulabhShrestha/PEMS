@@ -25,6 +25,7 @@ if (!isset($_SESSION["uid"])) {
 $expense = new Expense($_SESSION['uid']);
 $expenses = $expense->fetch();
 
+
 ?>
 
 

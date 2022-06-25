@@ -5,7 +5,7 @@ require_once("../database/Expense.class.php");
 session_start();
 
 // Which expense to delete
-$expName = $_GET["name"];
+$eid = $_GET["eid"];
 
 $expense = new Expense($_SESSION['uid']);
-$expense->deleteExpense($expName);
+$expense->deleteExpense($eid);

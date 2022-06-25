@@ -37,6 +37,21 @@ class Expense {
         return $result->fetch_all();
     }
 
+    // fetch all the expense of specific user of all date
+    public function fetchAll() {
+        $sql = "SELECT eid, name, amount FROM Expense WHERE uid = $this->uid";
+        $result = $this->conn->query($sql);
+
+        return $result->fetch_all();
+    }
+    // fetch the sum of total expenses till now
+    public function fetchTotalSumTillNow() {
+        $sql = "SELECT sum(amount) FROM Expense WHERE uid = $this->uid";
+        $result = $this->conn->query($sql);
+
+        return $result->fetch_assoc()["sum(amount)"];
+    }
+
     // Total number of today's expenses is returned
     public function todayTotalActivity() {
         $sql = "SELECT name FROM Expense WHERE uid = $this->uid AND date = CURRENT_DATE";
@@ -54,8 +69,8 @@ class Expense {
     }
 
     // Delete the expense of the user of today's date
-    public function deleteExpense($expName) {
-        $sql = "DELETE FROM Expense WHERE uid = $this->uid AND name = '$expName' AND date = CURRENT_DATE";
+    public function deleteExpense($eid) {
+        $sql = "DELETE FROM Expense WHERE uid = $this->uid AND eid = $eid AND date = CURRENT_DATE";
 
         $this->conn->query($sql);
 

@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<?php
+session_start();
+require_once("../database/Expense.class.php");
+$expense = new Expense($_SESSION['uid']);
+
+$expensesDetails = $expense->fetchAll();
+$sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
+?>
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
@@ -133,9 +142,10 @@
     <section>
         <div class="d-flex align-items-center justify-content-around my-3 mx-3 px-3 py-3 bg-info rounded">
             <span class="fs-3">Sort By</span>
-            <button type="button" class="btn btn-outline-dark border-2">Week</button>
-            <button type="button" class="btn btn-outline-dark border-2">Month</button>
-            <button type="button" class="btn btn-outline-dark border-2">Year</button>
+            <button type="button" class="btn btn-outline-dark border-2 filter-btn">Week</button>
+            <button type="button" class="btn btn-outline-dark border-2 filter-btn">Month</button>
+            <button type="button" class="btn btn-outline-dark border-2 filter-btn">Year</button>
+            <button type="button" class="btn btn-dark filter-btn">All Time</button>
         </div>
         <div class="ms-3 mt-4 fs-2">
             <u>Charts</u>
@@ -162,7 +172,6 @@
             const data = {
                 labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                 datasets: [{
-                    label: "Weekly Sales",
                     data: [12, 19, 3, 5, 2, 3, 120, 12, 2, 1, 12, 11],
                     backgroundColor: [
                         "rgba(255, 26, 104, 0.2)",
@@ -189,9 +198,14 @@
             // config
             const config = {
                 type: "bar",
-                data,
+                data: data,
                 options: {
                     responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
                 },
             };
 
@@ -203,7 +217,6 @@
             const dataDoughnut = {
                 labels: ["Remaining", "Total Spent"],
                 datasets: [{
-                    label: "Weekly Sales",
                     data: [50, 100],
                     backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)", "rgb(255, 205, 86)"],
                     borderColor: ["rgba(255, 26, 104, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
@@ -227,27 +240,48 @@
 
     </section>
 
-    <p class="fs-2 mt-4 ms-3"><u>Bigger Expenses</u></p>
+    <p class="fs-2 mt-4 ms-3"><u>Categories of expenses</u></p>
+    <p class="ms-3">Total expenses: Rs <?= $sumOfTotalExpensesTillNow ?></p>
     <div class="d-flex mx-3">
-        <?php for ($a = 1; $a < 5; $a++) : ?>
+        <?php foreach ($expensesDetails as $exp) : ?>
             <div class="container width-css float-left border rounded border-2 m-1 border-dark">
                 <div class="row">
                     <div class="col height-css d-flex align-items-center justify-content-center">
                         <div class="text-center">
-                            <span class="material-icons"> car_rental </span>
-                            <h1>hello</h1>
+                            <h1><?= $exp[1] ?></h1>
+                            <p>Rs <?= $exp[2] ?></p>
                         </div>
                     </div>
                 </div>
             </div>
-        <?php endfor; ?>
+        <?php endforeach; ?>
     </div>
 
 
 
-    <!--  JavaScript -->
-
+    <!--  bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
+
+    <script>
+        $(".filter-btn").on("click", function() {
+            // removing previous effect on previous clicked btns
+            $(".filter-btn").each(
+                function(index, elem) {
+                    $(elem).removeClass("btn-dark");
+                    $(elem).addClass("btn-outline-dark");
+                }
+            );
+
+
+            // add new class and removing old one
+            $(this).addClass("btn-dark");
+            $(this).removeClass("btn-outline-dark");
+
+        });
     </script>
 </body>
 
