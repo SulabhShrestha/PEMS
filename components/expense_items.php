@@ -8,7 +8,7 @@ class ExpenseCard {
     function get($eid, $name, $amt) {
 
         echo <<<HTML
-            <div class="card mb-4 ">
+            <div class="card mb-4 bg-info bg-gradient">
                 <div class="card-body d-flex justify-content-between expense-data-holder">
                     <div class="left-side d-flex align-items-center">
 

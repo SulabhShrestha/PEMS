@@ -44,7 +44,13 @@ $expenses = $expense->fetch();
     <!-- Google fonts -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+    <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
     <style>
+        * {
+            font-family: "Poppins", sans-serif;
+        }
+
         .delete-logo {
             color: red;
         }
@@ -53,109 +59,103 @@ $expenses = $expense->fetch();
             cursor: pointer;
             color: green;
         }
+
+        .h-font {
+            font-family: "Merienda", cursive;
+        }
     </style>
 </head>
 
-<body>
+<body class="bg-white">
 
-    <div class="row m-0">
-
-        <!-- Content part -->
-        <div class="p-0 ">
-            <table class="table">
-
-                <!-- nav part -->
-                <thead>
-
-                    <div class="d-flex justify-content-between align-items-center px-1 py-2">
-
-                        <div class="app-related d-flex align-items-center">
-                            <span class="material-icons mr-1">logo_dev</span>
-                            <span class="app-name">PEMS</span>
-                        </div>
-
-                        <span>
-                            <form class="form-inline">
-                                <input type="search" class="form-control ds-input" id="search-input" placeholder="Search expense..." style="position: relative; vertical-align: top;" dir="auto">
-                            </form>
-                        </span>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.php"><img src="assets/logo.png" alt="logo" style="height: 50px; width: 70px" /></a>
+            <div class="navbar-brand h-font fs-3 fw-bold">PEMS</div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <a class="btn btn-outline-dark active me-lg-3 me-2 my-2 shadow-none border-2" href="index.php" role="button">Dashboard</a>
+                    <a class="btn btn-outline-dark me-lg-3 me-2 my-2 shadow-none border-2" href="./pages/summary.php" role="button">Summary</a>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a href="/PEMS/utils/logout.php"><span class="material-icons me-1" id="icon2">face</span></a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
 
-                        <nav class="nav nav-pills nav-justified d-flex">
-                            <a class="nav-link active" href="#">Dashboard</a>
-                            <a class="nav-link" href="./pages/summary.php">Summary</a>
-                        </nav>
-                        <a href="/PEMS/utils/logout.php"><span class="material-icons">face</span></a>
-                    </div>
+    <!-- Content part -->
+    <div class="p-0 container-fluid">
+        <table class="table">
+            <tbody>
 
-                </thead>
-                <tbody>
+                <!-- further other information -->
+                <tr>
+                    <td class="d-flex justify-content-between align-items-center">
 
-                    <!-- further other information -->
-                    <tr>
-                        <td class="d-flex justify-content-between align-items-center">
-
-                            <div class="date">
-                                <span class="label">Today's date:</span>
-                                <?php
-                                echo '<span class="today">' . date("Y-m-d") . '</span>';
-                                ?>
-
-                            </div>
-
-                            <div class="today-exp-infos">
-                                <div class="total-activity">
-                                    <span class="desc">Total activity:</span>
-                                    <?php
-
-                                    // Total number of activity is returned
-                                    $totalActivity = $expense->todayTotalActivity();
-                                    echo '<span class="activity">' . $totalActivity . '</span>';
-                                    ?>
-                                </div>
-
-                                <div class="total-amount">
-
-                                    <span class="desc">Total amount:</span>
-                                    <?php
-
-                                    // Either 0 or total expenses amount
-                                    $totalExpenses = $expense->todayTotalExpensesAmount() ?? 0;
-
-                                    echo '<span class="amount"> Rs ' . $totalExpenses . '</span>';
-                                    ?>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                Add
-                            </button>
-
+                        <div class="date">
+                            <span class="label">Today's date:</span>
                             <?php
-                            $expCard = new ExpenseCard();
-
-                            foreach ($expenses as $exp) {
-                                $expCard->get($exp[0], $exp[1], $exp[2]);
-                            }
-
+                            echo '<span class="today">' . date("Y-m-d") . '</span>';
                             ?>
 
-                        </td>
+                        </div>
 
-                    </tr>
+                        <div class="today-exp-infos">
+                            <div class="total-activity">
+                                <span class="desc">Total activity:</span>
+                                <?php
 
-                </tbody>
-            </table>
-        </div>
+                                // Total number of activity is returned
+                                $totalActivity = $expense->todayTotalActivity();
+                                echo '<span class="activity">' . $totalActivity . '</span>';
+                                ?>
+                            </div>
 
+                            <div class="total-amount">
 
+                                <span class="desc">Total amount:</span>
+                                <?php
 
+                                // Either 0 or total expenses amount
+                                $totalExpenses = $expense->todayTotalExpensesAmount() ?? 0;
+
+                                echo '<span class="amount"> Rs ' . $totalExpenses . '</span>';
+                                ?>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <!-- Button trigger modal -->
+                        <div class="d-flex align-items-center justify-content-between mb-3 mt-2">
+                            <span class="fs-3">Expenses</span>
+                            <button type="button" class="btn btn-outline-dark border-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add</button>
+                        </div>
+
+                        <?php
+                        $expCard = new ExpenseCard();
+
+                        foreach ($expenses as $exp) {
+                            $expCard->get($exp[0], $exp[1], $exp[2]);
+                        }
+
+                        ?>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
         </table>
     </div>
+
+
     </div>
 
 

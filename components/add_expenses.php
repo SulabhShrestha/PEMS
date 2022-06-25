@@ -17,8 +17,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Add" name="add-exp" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-outline-dark shadow-none border-2" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-outline-dark shadow-none border-2" value="Add" name="add-exp" data-bs-dismiss="modal">
                 </div>
             </form>
         </div>
