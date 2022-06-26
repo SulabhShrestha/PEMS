@@ -2,16 +2,12 @@
 <html lang="en">
 
 <?php
-// https://stackoverflow.com/questions/2269307/using-jquery-ajax-to-call-a-php-function
-
-// https://stackoverflow.com/questions/39341901/how-to-call-a-php-function-from-ajax
 session_start();
 require_once("../database/Expense.class.php");
 $expense = new Expense($_SESSION['uid']);
 
-$expensesDetails = $expense->fetchAll();
+$expensesDetails = $expense->fetchCategoriesOfExpensesOfAllTime();
 $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
-
 
 ?>
 
@@ -169,8 +165,8 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
 
 
         <p class="fs-2 mt-4 ms-3"><u>Categories of expenses</u></p>
-        <p class="ms-3">Total expenses: Rs <?= $sumOfTotalExpensesTillNow ?? 0 ?></p>
-        <div class="d-flex align-content-center flex-wrap justify-content-center mx-3">
+        <p class="ms-3 total-expenses">Total expenses: Rs <?= $sumOfTotalExpensesTillNow ?? 0 ?></p>
+        <div class="d-flex align-content-center flex-wrap justify-content-center mx-3 categories-section">
             <?php foreach ($expensesDetails as $exp) : ?>
                 <div class="container width-css float-left border rounded border-2 m-1 border-dark">
                     <div class="row">
@@ -238,6 +234,21 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
                 return barGraphChart;
             }
 
+            function buildCategoryOfExpenseCard(heading, amount) {
+                return `
+                <div class="container width-css float-left border rounded border-2 m-1 border-dark">
+                    <div class="row">
+                        <div class="col height-css d-flex align-items-center justify-content-center">
+                            <div class="text-center">
+                                <h1>${heading}</h1>
+                                <p>Rs ${amount}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }
+
             // calling whole all the data on load
             $.ajax({
                 url: "../utils/fetch_expenses_details.php",
@@ -253,13 +264,13 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
                     let data = [];
 
                     // pushing label to [labels]
-                    for (let year of output) {
+                    for (let year of output[0]) {
                         labels.push(year[0]);
                         data.push(0); // adding default data
                     }
 
                     // pushing yearly amount to data
-                    for (let elem of output) {
+                    for (let elem of output[0]) {
                         let index = labels.indexOf(elem[0]); // finding the index of the year
 
                         // inserting data to [data]
@@ -287,6 +298,9 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
                 $(this).addClass("btn-dark");
                 $(this).removeClass("btn-outline-dark");
 
+                // removing all elemenents of categories-section and later adding new one
+                $(".categories-section").empty();
+
 
                 $.ajax({
                     context: $(this),
@@ -301,17 +315,21 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
                         let labels = [];
                         let data = [];
 
-                        console.log(output);
-
                         // adding relevant data to [labels] and [data]
                         if ($(this).text() === "Week") {
 
                             labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-                            for (let elem of output) {
-                                data.splice(elem[0] - 1, 1, elem[1]);
+                            // adding default data
+                            for (let label of labels) {
+                                data.push(0);
                             }
 
+                            // adding expenses to barchart
+                            for (let elem of output[0]) {
+
+                                data.splice(elem[0] - 1, 1, elem[1]);
+                            }
 
                         } else if ($(this).text() === "Month") {
 
@@ -336,11 +354,10 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
                                 data.push(0);
                             }
 
-                            // adding expenses data
-                            for (let elem of output) {
+                            // adding expenses data to bar chart
+                            for (let elem of output[0]) {
                                 data.splice(elem[0] - 1, 1, elem[1]);
                             }
-
 
 
                         } else if ($(this).text() === "Year") {
@@ -351,26 +368,37 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
                                 data.push(0);
                             }
 
-                            // adding expenses data
-                            for (let elem of output) {
+                            // adding expenses data to bar chart
+                            for (let elem of output[0]) {
                                 data.splice(elem[0] - 1, 1, elem[1]);
                             }
 
                         } else if ($(this).text() === "All Time") {
                             // pushing label to [labels]
-                            for (let year of output) {
+                            for (let year of output[0]) {
                                 labels.push(year[0]);
                                 data.push(0); // adding default data
                             }
 
                             // pushing yearly amount to data
-                            for (let elem of output) {
+                            for (let elem of output[0]) {
                                 let index = labels.indexOf(elem[0]); // finding the index of the year
 
                                 // inserting data to [data]
                                 data.splice(index, 1, elem[1]);
                             }
                         }
+
+                        // adding expenses details to categories section
+                        let sumOfTotalExpenses = 0;
+                        for (let elem of output[1]) {
+                            $(".categories-section").append(buildCategoryOfExpenseCard(elem[1], elem[2]));
+                            sumOfTotalExpenses += parseInt(elem[2]);
+                        }
+
+                        $(".total-expenses").text(`
+                        Total expenses: Rs ${sumOfTotalExpenses}
+                        `);
 
                         barGraphChartRef.destroy();
 

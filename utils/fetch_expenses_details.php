@@ -11,19 +11,34 @@ if (isset($_POST['action']) && !empty($_POST['action'])) {
     switch ($action) {
 
         case 'fetchWeek':
-            print_r(json_encode($expense->sumOfDailyExpensesOfThisWeek()));
+            $exp = $expense->sumOfDailyExpensesOfThisWeek();
+            $cat = $expense->fetchCategoriesOfExpensesOfThisWeek();
+
+            $json = json_encode([$exp, $cat]);
+            print_r($json);
             break;
 
         case 'fetchMonth':
-            print_r(json_encode($expense->sumOfDailyExpensesOfThisMonthOfThisYear()));
+            $exp = $expense->sumOfDailyExpensesOfThisMonthOfThisYear();
+            $cat = $expense->fetchCategoriesOfExpensesOfThisMonth();
+
+            $json = json_encode([$exp, $cat]);
+            print_r($json);
             break;
 
         case 'fetchYear':
-            print_r(json_encode($expense->sumOfMonthlyExpensesOfThisYear()));
+            $exp = $expense->sumOfMonthlyExpensesOfThisYear();
+            $cat = $expense->fetchCategoriesOfExpensesOfThisYear();
+
+            $json = json_encode([$exp, $cat]);
+            print_r($json);
             break;
 
         default:
-            print_r(json_encode($expense->sumOfYearlyExpenses()));
+            $exp = $expense->sumOfYearlyExpenses();
+            $cat = $expense->fetchCategoriesOfExpensesOfAllTime();
+            $json = json_encode([$exp, $cat]);
+            print_r($json);
             break;
     }
 }

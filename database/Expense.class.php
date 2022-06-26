@@ -37,13 +37,48 @@ class Expense {
         return $result->fetch_all();
     }
 
-    // fetch all the expense of specific user of all date
-    public function fetchAll() {
-        $sql = "SELECT eid, name, amount FROM Expense WHERE uid = $this->uid";
+    /***
+     * 
+     * Catergories of Expenses
+     */
+
+    // fetch all the expense of specific user of all year
+    public function fetchCategoriesOfExpensesOfAllTime() {
+        $sql = "SELECT eid, name, sum(amount) FROM Expense WHERE uid = $this->uid GROUP BY name, year";
         $result = $this->conn->query($sql);
 
         return $result->fetch_all();
     }
+
+    // fetch all the expense of specific user of this year
+    public function fetchCategoriesOfExpensesOfThisYear() {
+        $sql = "SELECT eid, name, sum(amount) FROM Expense WHERE uid = $this->uid AND year = YEAR(CURRENT_TIME) GROUP BY name, year";
+        $result = $this->conn->query($sql);
+
+        return $result->fetch_all();
+    }
+
+    // fetch all the expense of specific user of this month
+    public function fetchCategoriesOfExpensesOfThisMonth() {
+        $sql = "SELECT eid, name, sum(amount) FROM Expense WHERE uid = $this->uid AND year = YEAR(CURRENT_TIME) AND month = MONTH(CURRENT_TIME) GROUP BY name, year";
+        $result = $this->conn->query($sql);
+
+        return $result->fetch_all();
+    }
+
+    // fetch all the expense of specific user of this week
+    public function fetchCategoriesOfExpensesOfThisWeek() {
+        $sql = "SELECT eid, name, sum(amount) FROM Expense WHERE uid = $this->uid AND year = YEAR(CURRENT_TIME) AND month = MONTH(CURRENT_TIME) AND week = WEEK(CURRENT_TIME) GROUP BY name, year";
+        $result = $this->conn->query($sql);
+
+        return $result->fetch_all();
+    }
+
+
+
+
+
+
     // fetch the sum of total expenses till now
     public function fetchTotalSumTillNow() {
         $sql = "SELECT sum(amount) FROM Expense WHERE uid = $this->uid";
