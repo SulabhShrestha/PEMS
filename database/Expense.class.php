@@ -52,6 +52,38 @@ class Expense {
         return $result->fetch_assoc()["sum(amount)"];
     }
 
+    // Fetches sum of yearly expenses 
+    public function sumOfYearlyExpenses() {
+        $sql = "SELECT year, sum(amount) FROM Expense WHERE uid = $this->uid GROUP BY year";
+        $result = $this->conn->query($sql);
+
+        return $result->fetch_all();
+    }
+
+    // fetches sum of monthly expenses of current year
+    public function sumOfMonthlyExpensesOfThisYear() {
+        $sql = "SELECT month, sum(amount) FROM Expense WHERE uid = $this->uid AND year = YEAR(CURRENT_TIME) GROUP BY month";
+        $result = $this->conn->query($sql);
+
+        return $result->fetch_all();
+    }
+
+    // fetches sum of expenses of days of this month and current year
+    public function sumOfDailyExpensesOfThisMonthOfThisYear() {
+        $sql = "SELECT day, sum(amount) FROM Expense WHERE uid = $this->uid AND year = YEAR(CURRENT_TIME) AND month= MONTH(CURRENT_TIME) GROUP BY day";
+        $result = $this->conn->query($sql);
+
+        return $result->fetch_all();
+    }
+
+    // fetches weekly expenses of this month 
+    public function sumOfDailyExpensesOfThisWeek() {
+        $sql = "SELECT dayOfWeek, sum(amount) FROM Expense WHERE uid = $this->uid AND year = YEAR(CURRENT_TIME) AND month = MONTH(CURRENT_TIME) AND week = WEEK(CURRENT_TIME) GROUP BY dayOfWeek";
+        $result = $this->conn->query($sql);
+
+        return $result->fetch_all();
+    }
+
     // Total number of today's expenses is returned
     public function todayTotalActivity() {
         $sql = "SELECT name FROM Expense WHERE uid = $this->uid AND date = CURRENT_DATE";

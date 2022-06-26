@@ -2,12 +2,17 @@
 <html lang="en">
 
 <?php
+// https://stackoverflow.com/questions/2269307/using-jquery-ajax-to-call-a-php-function
+
+// https://stackoverflow.com/questions/39341901/how-to-call-a-php-function-from-ajax
 session_start();
 require_once("../database/Expense.class.php");
 $expense = new Expense($_SESSION['uid']);
 
 $expensesDetails = $expense->fetchAll();
 $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
+
+
 ?>
 
 <head>
@@ -132,7 +137,7 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
                             <input type="search" class="form-control ds-input" id="search-input" placeholder="Search" style="position: relative; vertical-align: top" dir="auto" />
                         </form>
                     </span>
-                    <a href="/Project/database/logout.php"><span class="material-icons me-1" id="icon2">face</span></a>
+                    <a href="/PEMS/database/logout.php"><span class="material-icons me-1" id="icon2">face</span></a>
                 </div>
             </div>
         </div>
@@ -141,148 +146,240 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
     <!-- summry begins -->
     <section>
         <div class="d-flex align-items-center justify-content-around my-3 mx-3 px-3 py-3 bg-info rounded">
-            <span class="fs-3">Sort By</span>
+            <span class="fs-3">Filter By:</span>
             <button type="button" class="btn btn-outline-dark border-2 filter-btn">Week</button>
             <button type="button" class="btn btn-outline-dark border-2 filter-btn">Month</button>
             <button type="button" class="btn btn-outline-dark border-2 filter-btn">Year</button>
             <button type="button" class="btn btn-dark filter-btn">All Time</button>
         </div>
-        <div class="ms-3 mt-4 fs-2">
-            <u>Charts</u>
-        </div>
+
         <div class="container-fluid">
             <div class="row align-item-center justify-content-center">
                 <div class="col-md-7 chart">
                     <h2 class="mx-2 my-2"><u>Expenses</u></h2>
-                    <canvas id="myChart"></canvas>
+                    <canvas id="barGraphChart"></canvas>
                 </div>
-                <div class="col-md-4 chart">
-                    <h2 class="mx-2 my-2"><u>Expenses Limit</u></h2>
-                    <canvas id="myChartDoughnut"></canvas>
-                </div>
+
             </div>
         </div>
 
         </div>
 
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            // bar chart
-            // setup
-            const data = {
-                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                datasets: [{
-                    data: [12, 19, 3, 5, 2, 3, 120, 12, 2, 1, 12, 11],
-                    backgroundColor: [
-                        "rgba(255, 26, 104, 0.2)",
-                        "rgba(54, 162, 235, 0.2)",
-                        "rgba(255, 206, 86, 0.2)",
-                        "rgba(75, 192, 192, 0.2)",
-                        "rgba(153, 102, 255, 0.2)",
-                        "rgba(255, 159, 64, 0.2)",
-                        "rgba(0, 0, 0, 0.2)",
-                    ],
-                    borderColor: [
-                        "rgba(255, 26, 104, 1)",
-                        "rgba(54, 162, 235, 1)",
-                        "rgba(255, 206, 86, 1)",
-                        "rgba(75, 192, 192, 1)",
-                        "rgba(153, 102, 255, 1)",
-                        "rgba(255, 159, 64, 1)",
-                        "rgba(0, 0, 0, 1)",
-                    ],
-                    borderWidth: 1,
-                }, ],
-            };
 
-            // config
-            const config = {
-                type: "bar",
-                data: data,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                },
-            };
 
-            // render init block
-            const myChart = new Chart(document.getElementById("myChart"), config);
 
-            // dougnut chart
-            // setup
-            const dataDoughnut = {
-                labels: ["Remaining", "Total Spent"],
-                datasets: [{
-                    data: [50, 100],
-                    backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)", "rgb(255, 205, 86)"],
-                    borderColor: ["rgba(255, 26, 104, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
-                    borderWidth: 1,
-                    hoverOffset: 4,
-                }, ],
-            };
-
-            // config
-            const configDoughnut = {
-                type: "doughnut",
-                data: dataDoughnut,
-                options: {
-                    responsive: true,
-                },
-            };
-
-            // render init block
-            const myChartDoughnut = new Chart(document.getElementById("myChartDoughnut"), configDoughnut);
-        </script>
-
-    </section>
-
-    <p class="fs-2 mt-4 ms-3"><u>Categories of expenses</u></p>
-    <p class="ms-3">Total expenses: Rs <?= $sumOfTotalExpensesTillNow ?></p>
-    <div class="d-flex mx-3">
-        <?php foreach ($expensesDetails as $exp) : ?>
-            <div class="container width-css float-left border rounded border-2 m-1 border-dark">
-                <div class="row">
-                    <div class="col height-css d-flex align-items-center justify-content-center">
-                        <div class="text-center">
-                            <h1><?= $exp[1] ?></h1>
-                            <p>Rs <?= $exp[2] ?></p>
+        <p class="fs-2 mt-4 ms-3"><u>Categories of expenses</u></p>
+        <p class="ms-3">Total expenses: Rs <?= $sumOfTotalExpensesTillNow ?? 0 ?></p>
+        <div class="d-flex align-content-center flex-wrap justify-content-center mx-3">
+            <?php foreach ($expensesDetails as $exp) : ?>
+                <div class="container width-css float-left border rounded border-2 m-1 border-dark">
+                    <div class="row">
+                        <div class="col height-css d-flex align-items-center justify-content-center">
+                            <div class="text-center">
+                                <h1><?= $exp[1] ?></h1>
+                                <p>Rs <?= $exp[2] ?></p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
+            <?php endforeach; ?>
+        </div>
+
+        <!--  bootstrap -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+        </script>
+
+        <!-- Jquery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+            // Reference to bar graph
+            let barGraphChartRef;
+
+            function buildBarChart(labels, values) {
+
+                let data = {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: [
+                            'rgb(54, 162, 235)',
+                            'rgb(14, 162, 235)',
+                            'rgb(54, 12, 35)',
+                            'rgb(54, 62, 235)',
+
+                        ],
+                    }],
+                };
+
+                // config
+                const config = {
+                    type: "bar",
+                    data: data,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    },
+                };
+
+                // BarGrapgh chart ref
+                let graphArea = document.getElementById("barGraphChart").getContext("2d");
+
+                const barGraphChart = new Chart(graphArea, config);
+
+                barGraphChartRef = barGraphChart;
+
+                return barGraphChart;
+            }
+
+            // calling whole all the data on load
+            $.ajax({
+                url: "../utils/fetch_expenses_details.php",
+                data: {
+                    action: "fetchAllTime"
+                }, // data send to above url
+                dataType: "json",
+                type: 'post',
+                success: function(output) {
+
+                    // labels and data at first are empty
+                    let labels = [];
+                    let data = [];
+
+                    // pushing label to [labels]
+                    for (let year of output) {
+                        labels.push(year[0]);
+                        data.push(0); // adding default data
+                    }
+
+                    // pushing yearly amount to data
+                    for (let elem of output) {
+                        let index = labels.indexOf(elem[0]); // finding the index of the year
+
+                        // inserting data to [data]
+                        data.splice(index, 1, elem[1]);
+                    }
 
 
-
-    <!--  bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
-
-    <!-- Jquery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
-
-    <script>
-        $(".filter-btn").on("click", function() {
-            // removing previous effect on previous clicked btns
-            $(".filter-btn").each(
-                function(index, elem) {
-                    $(elem).removeClass("btn-dark");
-                    $(elem).addClass("btn-outline-dark");
+                    buildBarChart(labels, data);
                 }
-            );
+            });
 
 
-            // add new class and removing old one
-            $(this).addClass("btn-dark");
-            $(this).removeClass("btn-outline-dark");
+            // adding click events to all filtering buttons
+            $(".filter-btn").on("click", function() {
+                // removing previous effect on previous clicked from all btns
+                $(".filter-btn").each(
+                    function(index, elem) {
+                        $(elem).removeClass("btn-dark");
+                        $(elem).addClass("btn-outline-dark");
+                    }
+                );
 
-        });
-    </script>
+
+                // add new class and removing old one
+                $(this).addClass("btn-dark");
+                $(this).removeClass("btn-outline-dark");
+
+
+                $.ajax({
+                    context: $(this),
+                    url: "../utils/fetch_expenses_details.php",
+                    data: {
+                        action: "fetch" + $(this).text()
+                    }, // data send to above url
+                    dataType: "json",
+                    type: 'post',
+                    success: function(output) {
+                        // labels and data at first are empty
+                        let labels = [];
+                        let data = [];
+
+                        console.log(output);
+
+                        // adding relevant data to [labels] and [data]
+                        if ($(this).text() === "Week") {
+
+                            labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+                            for (let elem of output) {
+                                data.splice(elem[0] - 1, 1, elem[1]);
+                            }
+
+
+                        } else if ($(this).text() === "Month") {
+
+                            // adding to label
+                            for (let a = 1; a <= 30; a++) {
+                                labels.push(a);
+                            }
+
+                            // jan, mar, may, july, aug, oct, dec has 31 days
+
+                            let date = new Date();
+                            thisMonth = date.getMonth() + 1;
+
+                            // Adding 31 to specific month
+                            for (let month of [1, 3, 5, 7, 8, 10, 12]) {
+                                if (thisMonth === month)
+                                    labels.push(31);
+                            }
+
+                            // adding default data
+                            for (let label of labels) {
+                                data.push(0);
+                            }
+
+                            // adding expenses data
+                            for (let elem of output) {
+                                data.splice(elem[0] - 1, 1, elem[1]);
+                            }
+
+
+
+                        } else if ($(this).text() === "Year") {
+                            labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+                            // adding default data
+                            for (let label of labels) {
+                                data.push(0);
+                            }
+
+                            // adding expenses data
+                            for (let elem of output) {
+                                data.splice(elem[0] - 1, 1, elem[1]);
+                            }
+
+                        } else if ($(this).text() === "All Time") {
+                            // pushing label to [labels]
+                            for (let year of output) {
+                                labels.push(year[0]);
+                                data.push(0); // adding default data
+                            }
+
+                            // pushing yearly amount to data
+                            for (let elem of output) {
+                                let index = labels.indexOf(elem[0]); // finding the index of the year
+
+                                // inserting data to [data]
+                                data.splice(index, 1, elem[1]);
+                            }
+                        }
+
+                        barGraphChartRef.destroy();
+
+                        buildBarChart(labels, data);
+                    }
+                });
+
+            });
+        </script>
 </body>
 
 </html>

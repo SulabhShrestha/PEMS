@@ -3,7 +3,7 @@ require_once("../database/Auth.class.php");
 session_start();
 
 if (isset($_SESSION["login"])) {
-    header("Location: /Project/index.php");
+    header("Location: /PEMS/index.php");
 }
 
 if (isset($_POST["submit"])) {

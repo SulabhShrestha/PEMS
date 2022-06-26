@@ -19,7 +19,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Update" name="update-exp" data-bs-dismiss="modal">
+                    <input type="submit" class="btn btn-dark" value="Update" name="update-exp" data-bs-dismiss="modal">
                 </div>
             </form>
         </div>
