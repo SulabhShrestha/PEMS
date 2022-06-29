@@ -11,6 +11,9 @@ require_once("components/remainder.card.php");
 require_once("components/add_remainder.modal.php");
 require_once("database/Remainder.class.php");
 require_once("components/update_remainder.php");
+require_once("components/add_limit.modal.php");
+require_once("database/ExpenseLimit.class.php");
+require_once("components/update_expense_limit.modal.php");
 
 if (!isset($_SESSION["login"])) {
     header("Location: /PEMS/pages/signin.php");
@@ -31,6 +34,10 @@ $expenses = $expense->fetch();
 
 $rem = new Remainder($_SESSION['uid']);
 $remainders = $rem->fetchAll();
+
+// Whether user has expense limit set or not
+$expLimit = new ExpenseLimit($_SESSION["uid"]);
+$hasSetExpLimit = $expLimit->hasAlreadySet();
 
 
 ?>
@@ -71,9 +78,14 @@ $remainders = $rem->fetchAll();
         }
 
         .editExpenseBtn,
-        .editRemainderBtn {
+        .editRemainderBtn,
+        .editExpenseLimitBtn {
             cursor: pointer;
             color: green;
+        }
+
+        .addExpenseLimitBtn {
+            cursor: pointer;
         }
 
         .rem {
@@ -156,22 +168,24 @@ $remainders = $rem->fetchAll();
                                 </div>
                             </td>
                         </tr>
+
                         <!-- expense limit -->
                         <tr>
                             <td class="d-flex justify-content-between align-items-center bg-light bg-gradient shadow-sm rounded mx-2 mt-2">
-                                <div class="limit d-flex">
-                                    <div>
-                                        <span class="label"> Daily Expense Limit:</span>
-                                    </div>
-                                    <div>
-                                        <span class="material-icons px-2">add</span>
-                                    </div>
-                                    <div>
-                                        <span class="material-icons">edit</span>
-                                    </div>
+                                <div class="limit d-flex align-items-center">
 
+                                    <span class="label"> Daily Expense Limit:</span>
+
+                                    <?php
+
+                                    if ($hasSetExpLimit === "No") {
+                                        echo  '<span class="material-icons px-2 addExpenseLimitBtn" data-bs-toggle="modal" data-bs-target="#limitModal">add</span>';
+                                    } else {
+                                        echo '&nbsp;Rs ' . $hasSetExpLimit["amount"] . '&nbsp; &nbsp;<span class="material-icons editExpenseLimitBtn" data-bs-toggle="modal" data-bs-target="#updateLimitModal">edit</span>';
+                                    }
+
+                                    ?>
                                 </div>
-
 
                                 <div class="limit-infos">
                                     <div class="limit-left">

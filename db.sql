@@ -56,3 +56,13 @@ CREATE TABLE
         CHECK(payingDate > CURRENT_TIME),
         FOREIGN KEY (uid) REFERENCES User(id)
     );
+
+--- Expense limit TABLE
+
+CREATE TABLE
+    ExpenseLimit(
+        uid INT NOT NULL,
+        dlid INT PRIMARY KEY AUTO_INCREMENT,
+        amount INT NOT NULL,
+        FOREIGN KEY (uid) REFERENCES User(id)
+    );

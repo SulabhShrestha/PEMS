@@ -256,6 +256,7 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
                     dataType: "json",
                     type: 'post',
                     success: function(output) {
+                        console.log(output);
                         // labels and data at first are empty
                         let labels = [];
                         let data = [];
