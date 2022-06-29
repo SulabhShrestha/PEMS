@@ -36,70 +36,6 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
             font-family: "Merienda", cursive;
         }
 
-        #icon1 {
-            font-size: 45px;
-            color: rgb(14, 8, 8);
-        }
-
-        #icon2 {
-            font-size: 45px;
-            color: rgb(12, 6, 6);
-        }
-
-        #search-input {
-            border-color: black;
-            border-width: 2px;
-        }
-
-        .fs-1 {
-            font-size: 2rem;
-            text-decoration: underline;
-        }
-
-        .width-css {
-            width: 48vw;
-        }
-
-        @media screen and (min-width: 576px) {
-            .width-css {
-                width: 43vw;
-            }
-
-            .height-css {
-                height: 16vh;
-            }
-        }
-
-        @media screen and (min-width: 768px) {
-            .width-css {
-                width: 32vw;
-            }
-
-            .height-css {
-                height: 16vh;
-            }
-        }
-
-        @media screen and (min-width: 1024px) {
-            .width-css {
-                width: 28vw;
-            }
-
-            .height-css {
-                height: 20vh;
-            }
-        }
-
-        @media screen and (min-width: 1440px) {
-            .width-css {
-                width: 22vw;
-            }
-
-            .height-css {
-                height: 22vh;
-            }
-        }
-
         .chart {
             margin: 10px;
             padding: 10px;
@@ -114,26 +50,29 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
 </head>
 
 <body class="bg-white">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top">
+    <nav class="navbar navbar-expand-sm navbar-light bg-light shadow-sm sticky-top px-lg-3 py-lg-2">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.php"><img src="../assets/logo.png" alt="logo" style="height: 50px; width: 70px" /></a>
+            <a class="navbar-brand" href="/PEMS/index.php">
+                <img src="/PEMS/assets/logo.png" alt="logo" style="height: 50px; width: 70px" />
+            </a>
             <div class="navbar-brand h-font fs-3 fw-bold">PEMS</div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <div class="navbar-nav mx-auto mb-2 mb-lg-0">
-                    <a class="btn btn-outline-dark me-lg-3 me-2 my-2 shadow-none border-2" href="../index.php" role="button">Dashboard</a>
-                    <a class="btn btn-outline-dark active me-lg-3 me-2 my-2 shadow-none border-2" href="summary.php" role="button">Summary</a>
+                    <a class="btn btn-outline-dark me-lg-3 me-2 my-2 shadow-none border-2" href="/PEMS/index.php" role="button">Dashboard</a>
+                    <a class="btn btn-outline-dark active me-lg-3 me-2 my-2 shadow-none border-2" href="./summary.php" role="button">Summary</a>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <span class="material-icons" id="icon1"> notifications </span>
-                    <span>
-                        <form class="form-inline my-1 mx-2">
-                            <input type="search" class="form-control ds-input" id="search-input" placeholder="Search" style="position: relative; vertical-align: top" dir="auto" />
-                        </form>
-                    </span>
-                    <a href="/PEMS/database/logout.php"><span class="material-icons me-1" id="icon2">face</span></a>
+                    <!-- logout drop down -->
+                    <div class="dropstart">
+                        <span class="material-icons me-1 profile" id="icon2" id="dropdownMenu1" data-bs-toggle="dropdown" aria-expanded="false">face</span>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li class="text-center"><?= $_SESSION['username'] ?></li>
+                            <li class="text-center mt-4"><a class="btn btn-danger border border-2 border-dark" href="/PEMS/utils/logout.php" role="button">Log Out</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -250,37 +189,42 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
             }
 
             // calling whole all the data on load
-            $.ajax({
-                url: "../utils/fetch_expenses_details.php",
-                data: {
-                    action: "fetchAllTime"
-                }, // data send to above url
-                dataType: "json",
-                type: 'post',
-                success: function(output) {
+            $(document).ready(
+                $.ajax({
+                    url: "../utils/fetch_expenses_details.php",
+                    data: {
+                        action: "fetchAllTime"
+                    }, // data send to above url
+                    dataType: "json",
+                    type: 'post',
+                    success: function(output) {
 
-                    // labels and data at first are empty
-                    let labels = [];
-                    let data = [];
+                        // labels and data at first are empty
+                        let labels = [];
+                        let data = [];
 
-                    // pushing label to [labels]
-                    for (let year of output[0]) {
-                        labels.push(year[0]);
-                        data.push(0); // adding default data
+                        // pushing label to [labels]
+                        for (let year of output[0]) {
+                            labels.push(year[0]);
+                            data.push(0); // adding default data
+                        }
+
+                        // pushing yearly amount to data
+                        for (let elem of output[0]) {
+                            let index = labels.indexOf(elem[0]); // finding the index of the year
+
+                            // inserting data to [data]
+                            data.splice(index, 1, elem[1]);
+                        }
+
+
+                        buildBarChart(labels, data);
                     }
-
-                    // pushing yearly amount to data
-                    for (let elem of output[0]) {
-                        let index = labels.indexOf(elem[0]); // finding the index of the year
-
-                        // inserting data to [data]
-                        data.splice(index, 1, elem[1]);
-                    }
+                })
+            );
 
 
-                    buildBarChart(labels, data);
-                }
-            });
+
 
 
             // adding click events to all filtering buttons

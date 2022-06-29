@@ -11,14 +11,14 @@
 
                     <!-- Getting data from here -->
 
-                    <input type="text" class="form-control" placeholder="Expense name" name="expenseName">
+                    <input type="text" class="form-control" placeholder="Expense name" name="expenseName" required>
 
-                    <input type="number" class="form-control mt-2" placeholder="Amount" name="expenseAmount" autocomplete="off">
+                    <input type="number" class="form-control mt-2" placeholder="Amount" name="expenseAmount" autocomplete="off" required>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-dark shadow-none border-2" data-bs-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-dark" value="Add" name="add-exp" data-bs-dismiss="modal">
+                    <input type="submit" class="btn btn-dark" value="Add" name="add-exp">
                 </div>
             </form>
         </div>
@@ -36,8 +36,7 @@ if (isset($_POST["add-exp"])) {
     if ($empName !== "" && $expAmount !== "") {
         $expense = new Expense($uid);
         $expense->add($expName, $expAmount);
+        header("Location: index.php");
     }
-
-    header("Location: index.php");
 }
 ?>
