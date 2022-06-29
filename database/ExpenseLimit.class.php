@@ -41,7 +41,7 @@ class ExpenseLimit {
             // var_dump($result->fetch_assoc());
             return $result->fetch_assoc();
         } else {
-            return "Yes";
+            return "No";
         }
     }
 }

@@ -9,6 +9,8 @@ $expense = new Expense($_SESSION['uid']);
 $expensesDetails = $expense->fetchCategoriesOfExpensesOfAllTime();
 $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
 
+echo $_SESSION['uid'];
+
 ?>
 
 <head>

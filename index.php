@@ -190,9 +190,9 @@ $hasSetExpLimit = $expLimit->hasAlreadySet();
 
                                 <div class="limit-infos">
                                     <div class="limit-left">
-                                        <span class="desc">Remaining Amount:Rs
+                                        <span class="desc">Remaining Limit:Rs
                                             <?php
-                                            if (isset($hasSetExpLimit)) {
+                                            if ($hasSetExpLimit !== "No") {
                                                 echo $hasSetExpLimit["amount"] - $totalExpenses;
                                             } else {
                                                 echo 0;
