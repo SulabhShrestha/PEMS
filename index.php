@@ -31,6 +31,7 @@ if (!isset($_SESSION["uid"])) {
 
 $expense = new Expense($_SESSION['uid']);
 $expenses = $expense->fetch();
+$totalExpenses = $expense->todayTotalExpensesAmount() ?? 0;
 
 $rem = new Remainder($_SESSION['uid']);
 $remainders = $rem->fetchAll();
@@ -160,7 +161,7 @@ $hasSetExpLimit = $expLimit->hasAlreadySet();
                                     <div class="total-amount">
                                         <span class="desc">Total amount:</span>
                                         <?php
-                                        $totalExpenses = $expense->todayTotalExpensesAmount() ?? 0;
+
 
                                         echo '<span class="amount"> Rs ' . $totalExpenses . '</span>';
                                         ?>
@@ -189,7 +190,16 @@ $hasSetExpLimit = $expLimit->hasAlreadySet();
 
                                 <div class="limit-infos">
                                     <div class="limit-left">
-                                        <span class="desc">Remaining Limit:4000</span>
+                                        <span class="desc">Remaining Amount:Rs
+                                            <?php
+                                            if (isset($hasSetExpLimit)) {
+                                                echo $hasSetExpLimit["amount"] - $totalExpenses;
+                                            } else {
+                                                echo 0;
+                                            }
+                                            ?>
+
+                                        </span>
                                     </div>
 
 
