@@ -122,7 +122,7 @@ $hasSetExpLimit = $expLimit->hasAlreadySet();
                         <span class="material-icons me-1 profile" id="icon2" id="dropdownMenu1" data-bs-toggle="dropdown" aria-expanded="false">face</span>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li class="text-center"><?= $_SESSION['username'] ?></li>
-                            <li class="text-center mt-4"><a class="btn btn-danger border border-2 border-dark" href="/pems/utils/logout.php" role="button">Log Out</a></li>
+                            <li class="text-center mt-4"><a class="btn btn-danger border border-2 border-dark" href="/PEMS/utils/logout.php" role="button">Log Out</a></li>
                         </ul>
                     </div>
                 </div>

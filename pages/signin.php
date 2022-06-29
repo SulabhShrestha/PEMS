@@ -64,8 +64,11 @@ if (isset($_POST["submit"])) {
                             </div>
 
                             <form action="" method="POST">
-                                <input type="text" name="email" id="email" class="form-control my-4 py-2 border border-1 border-dark" placeholder="Email" />
-                                <input type="text" name="password" id="password" class="form-control my-4 py-2 border border-1 border-dark" placeholder="Password" />
+
+                                <input type="text" name="email" id="email" value="<?= $_SESSION['email'] ?? '' ?>" class="form-control my-4 py-2 border border-1 border-dark" placeholder="Email" required />
+
+                                <input type="password" name="password" id="password" value="<?= $_SESSION['password'] ?? '' ?>" class="form-control my-4 py-2 border border-1 border-dark" placeholder="Password" required />
+
                                 <div class="text-center">
                                     <!-- If it's a wrong information -->
                                     <?php

@@ -1,20 +1,16 @@
 <?php
 require_once("../database/Auth.class.php");
+session_start();
+
 if (isset($_POST["submit"])) {
     $username = $_POST["username"];
     $email = $_POST["email"];
     $password = $_POST["password"];
 
+    // creating connection
 
-    if (strlen($password) < 8)
-        header("Location: signup.php?error=Password length must be greater or equal to 8");
-
-    else {
-        // creating connection
-        session_start();
-        $auth = new Auth($username, $email, $password);
-        $auth->signUp();
-    }
+    $auth = new Auth($username, $email, $password);
+    $auth->signUp();
 }
 ?>
 
@@ -61,10 +57,13 @@ if (isset($_POST["submit"])) {
                                 <P class="mt-1"><em>Please enter your details.</em></P>
                             </div>
                             <form action="" method="POST">
-                                <input type="text" name="username" class="form-control my-4 py-2 border border-1 border-dark" placeholder="Username" />
-                                <input type="text" name="email" class="form-control my-4 py-2 border border-1 border-dark" placeholder="Email" />
-                                <input type="text" name="password" class="form-control my-4 py-2 border border-1 border-dark" placeholder="Password" />
-                                <!-- If account already exists -->
+                                <input type="text" name="username" class="form-control my-4 py-2 border border-1 border-dark" value="<?= $_SESSION['username'] ?? '' ?>" placeholder="Username" required />
+
+                                <input type="text" name="email" value="<?= $_SESSION['email'] ?? '' ?>" class="form-control my-4 py-2 border border-1 border-dark" placeholder="Email" required />
+
+                                <input type="password" name="password" value="<?= $_SESSION['password'] ?? '' ?>" class="form-control my-4 py-2 border border-1 border-dark" placeholder="Password" required />
+
+                                <!-- If any errors -->
                                 <?php
                                 if (isset($_GET["error"])) {
                                     echo '<p class="alert alert-danger py-1 text-center">';

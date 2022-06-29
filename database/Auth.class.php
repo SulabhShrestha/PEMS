@@ -30,6 +30,10 @@ class Auth {
         }
     }
 
+    public function __destruct() {
+        $this->conn->close();
+    }
+
     //magic functions: used to set value to any class variable
     public function _set($property, $value) {
         if (property_exists($this, $property)) {
@@ -61,35 +65,37 @@ class Auth {
         return false;
     }
 
-    // checking if the provided email and password matches 
-    public function checkForValidCredentail() {
-    }
 
     // Handles signIn action
     public function signIn() {
-        $email = $this->email;
-        $password = $this->password;
 
-        $sqlStatement = "SELECT * FROM PEMS.User 
-        WHERE email = '$email' AND password = '$password'";
+        // setting email or password for user convience to session
+        $_SESSION["email"] = $this->email;
+        $_SESSION["password"] = $this->password;
 
-        $result = $this->conn->query($sqlStatement);
-        $this->conn->close();
+        if (filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            $sqlStatement = "SELECT * FROM PEMS.User 
+            WHERE email = '$this->email' AND password = '$this->password'";
 
-        if ($result->num_rows > 0) {
+            $result = $this->conn->query($sqlStatement);
 
-            $resultArray = $result->fetch_assoc();
+            if ($result->num_rows > 0) {
 
-            $_SESSION["login"] = true; // user is logged in now
-            $_SESSION["email"] = $email;
-            $_SESSION["username"] = $resultArray["username"];
-            $_SESSION["uid"] = $resultArray["id"];
+                $resultArray = $result->fetch_assoc();
 
-            header("Location: ../index.php");
-        }
-        // Displaying wrong email or password 
-        else {
-            header("Location: signin.php?error=Wrong email or password");
+                $_SESSION["login"] = true; // user is logged in now
+
+                $_SESSION["username"] = $resultArray["username"];
+                $_SESSION["uid"] = $resultArray["id"];
+
+                header("Location: ../index.php");
+            }
+            // Displaying wrong email or password 
+            else {
+                header("Location: signin.php?error=Wrong email or password");
+            }
+        } else {
+            header("Location: signin.php?error=Invalid email.");
         }
     }
 
@@ -97,26 +103,34 @@ class Auth {
     // Handlies sign up action
     public function signUp() {
         $hasAccount = $this->checkIfPreviouslyEmailExist();
+        $_SESSION["email"] = $this->email;
+        $_SESSION["username"] = $this->username;
+        $_SESSION["password"] = $this->password;
 
         if (!$hasAccount) {
-            $sqlStatement = "INSERT INTO PEMS.User(email, username, password) VALUES(?, ?, ?)";
 
-            // This is to prevent SQLi
-            $sqlQuery = $this->conn->prepare($sqlStatement);
+            if (strlen($this->password) < 8)
+                header("Location: signup.php?error=Password length must be greater or equal to 8");
 
-            $result = $sqlQuery->execute([$this->email, $this->username, $this->password]);
-            $this->conn->close();
+            if (filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+                $sqlStatement = "INSERT INTO PEMS.User(email, username, password) VALUES(?, ?, ?)";
 
-            // redirecting user to index.php
-            if ($result) {
-                $_SESSION["login"] = true; // user is logged in now
-                $_SESSION["email"] = $this->email;
-                $_SESSION["username"] = $this->username;
-                header("Location: ../index.php");
+                // This is to prevent SQLi
+                $sqlQuery = $this->conn->prepare($sqlStatement);
+
+                $result = $sqlQuery->execute([$this->email, $this->username, $this->password]);
+
+                // redirecting user to index.php
+                if ($result) {
+                    $_SESSION["login"] = true; // user is logged in now
+
+                    header("Location: ../index.php");
+                }
+            } else {
+                header("Location: signup.php?error=Invalid email.");
             }
         } else {
-            $this->conn->close();
-            header("Location: signup.php?error=You already have an account associated with that email. Please login.");
+            header("Location: signup.php?error=You already have an account.");
         }
     }
 }
