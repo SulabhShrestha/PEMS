@@ -39,4 +39,12 @@ class Remainder {
 
         header("Location: /PEMS/index.php");
     }
+
+    // Update the expense of the user of today's date
+    public function update($rid, $remName, $amount, $payingDate) {
+
+        $sql = "UPDATE Remainder set name = '$remName', amount = $amount, payingDate = '$payingDate' WHERE rid = $rid AND uid = $this->uid";
+
+        $this->conn->query($sql);
+    }
 }

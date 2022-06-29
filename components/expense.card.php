@@ -22,7 +22,7 @@ class ExpenseCard {
                         <span class="amount data">Rs $amt</span>
                         
                         
-                        <span class="material-icons px-2 editBtn" >edit</span>
+                        <span class="material-icons px-2 editExpenseBtn" >edit</span>
                         
 
                         <a href="utils/delete_expense.php?eid=$eid">

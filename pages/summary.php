@@ -36,6 +36,10 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
             font-family: "Merienda", cursive;
         }
 
+        .profile {
+            cursor: pointer;
+        }
+
         .chart {
             margin: 10px;
             padding: 10px;
@@ -222,9 +226,6 @@ $sumOfTotalExpensesTillNow = $expense->fetchTotalSumTillNow();
                     }
                 })
             );
-
-
-
 
 
             // adding click events to all filtering buttons

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <?php
 session_start();
+ob_start();
 
 require_once("./components/add_expenses.php");
 require_once("database/Expense.class.php");
@@ -9,6 +10,7 @@ require_once("components/update_expense.php");
 require_once("components/remainder.card.php");
 require_once("components/add_remainder.modal.php");
 require_once("database/Remainder.class.php");
+require_once("components/update_remainder.php");
 
 if (!isset($_SESSION["login"])) {
     header("Location: /PEMS/pages/signin.php");
@@ -68,7 +70,8 @@ $remainders = $rem->fetchAll();
             color: red;
         }
 
-        .editBtn {
+        .editExpenseBtn,
+        .editRemainderBtn {
             cursor: pointer;
             color: green;
         }
@@ -232,13 +235,13 @@ $remainders = $rem->fetchAll();
     <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
 
     <script>
-        // Adding data to modal while updating
+        // Adding data to modal while updating for Expenses
         $(document).ready(function() {
 
-            $(".editBtn").on("click", function() {
+            $(".editExpenseBtn").on("click", function() {
 
                 // Showing update modal on click of edit btn
-                $("#updateModal").modal('show');
+                $("#updateExpenseModal").modal('show');
 
                 // getting eid only in array
                 let eid = $(this).closest(".expense-data-holder").find(".eid").map(function() {
@@ -252,12 +255,49 @@ $remainders = $rem->fetchAll();
                     }
                 ).get();
 
-                // setting value
+                console.log($(this));
+
+                // setting value to modal
                 $("#eid").val(eid[0]);
                 $(".expName").val(values[0]);
 
                 // don't want Rs to be inserted
                 $(".expAmount").val(values[1].split(" ")[1]);
+            });
+        });
+
+        // Adding data to modal while updating for Remainder
+        $(document).ready(function() {
+
+            $(".editRemainderBtn").on("click", function() {
+
+                // Showing update modal on click of edit btn
+                $("#updateRemainderModal").modal('show');
+
+                // getting rid only in array
+                let rid = $(this).closest(".remainder-data-holder").find(".rid").map(function() {
+                    return this.value;
+                }).get();
+
+                console.log($(this), rid);
+
+                // gets array of [remainderName, amnt]
+                let values = $(this).closest(".remainder-data-holder").find(".data").map(
+                    function() {
+                        return this.textContent;
+                    }
+                ).get();
+
+                console.log(values);
+
+                // setting value to modal
+                $("#rid").val(rid[0]);
+                $(".remName").val(values[0]);
+
+                // don't want Rs to be inserted
+                $(".remAmount").val(values[2].split(" ")[1]);
+
+
             });
         });
     </script>

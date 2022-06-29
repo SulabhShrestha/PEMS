@@ -147,7 +147,7 @@ class Expense {
     // Update the expense of the user of today's date
     public function update($eid, $expName, $expAmount) {
 
-        $sql = "UPDATE Expense set name = '$expName', amount = $expAmount WHERE eid = $eid";
+        $sql = "UPDATE Expense set name = '$expName', amount = $expAmount WHERE eid = $eid AND uid = $this->uid";
         $this->conn->query($sql);
 
         header("Location: /PEMS/index.php");

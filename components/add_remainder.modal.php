@@ -1,22 +1,3 @@
-<?php
-require_once("database/Remainder.class.php");
-
-if (isset($_POST["add-rem"])) {
-
-    $remName = $_POST["remName"];
-    $remAmount = $_POST["remAmount"];
-    $uid = $_SESSION['uid'];
-
-    $payingDate = $_POST["payingDate"];
-
-    if ($remName !== "" && $remAmount !== "" && $payingDate !== "") {
-        $rem = new Remainder($uid);
-        $rem->add($remName, $remAmount, $payingDate);
-        header("Location: index.php");
-    }
-}
-?>
-
 <!-- Modal -->
 <div class="modal fade" id="remainderModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="remainderModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -47,3 +28,22 @@ if (isset($_POST["add-rem"])) {
         </div>
     </div>
 </div>
+
+<?php
+require_once("database/Remainder.class.php");
+
+if (isset($_POST["add-rem"])) {
+
+    $remName = $_POST["remName"];
+    $remAmount = $_POST["remAmount"];
+    $uid = $_SESSION['uid'];
+
+    $payingDate = $_POST["payingDate"];
+
+    if ($remName !== "" && $remAmount !== "" && $payingDate !== "") {
+        $rem = new Remainder($uid);
+        $rem->add($remName, $remAmount, $payingDate);
+    }
+    header("Location: index.php");
+}
+?>
