@@ -10,7 +10,7 @@ class ExpenseCard {
         echo <<<HTML
             <div class="card mb-4 bg-info bg-gradient">
                 <div class="card-body d-flex justify-content-between expense-data-holder">
-                    <div class="left-side d-flex align-items-center">
+                    <div class="d-flex align-items-center">
 
                         <input type="hidden" class="eid" value=$eid>
 
@@ -18,7 +18,7 @@ class ExpenseCard {
                         <span class="title px-2 data">$name</span>
                     </div>
 
-                    <div class="right-side d-flex align-items-center">
+                    <div class="d-flex align-items-center">
                         <span class="amount data">Rs $amt</span>
                         
                         

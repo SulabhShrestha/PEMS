@@ -55,6 +55,9 @@ $hasSetExpLimit = $expLimit->hasAlreadySet();
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+
     <style>
         html,
         body,
@@ -161,8 +164,6 @@ $hasSetExpLimit = $expLimit->hasAlreadySet();
                                     <div class="total-amount">
                                         <span class="desc">Total amount:</span>
                                         <?php
-
-
                                         echo '<span class="amount"> Rs ' . $totalExpenses . '</span>';
                                         ?>
                                     </div>
@@ -190,15 +191,17 @@ $hasSetExpLimit = $expLimit->hasAlreadySet();
 
                                 <div class="limit-infos">
                                     <div class="limit-left">
-                                        <span class="desc">Remaining Limit:Rs
-                                            <?php
-                                            if ($hasSetExpLimit !== "No") {
-                                                echo $hasSetExpLimit["amount"] - $totalExpenses;
-                                            } else {
-                                                echo 0;
-                                            }
-                                            ?>
+                                        <span class="desc">Remaining Limit:Rs <span class="remaining-amount">
 
+                                                <?php
+                                                if ($hasSetExpLimit !== "No") {
+                                                    echo $hasSetExpLimit["amount"] - $totalExpenses;
+                                                } else {
+                                                    echo 0;
+                                                }
+                                                ?>
+
+                                            </span>
                                         </span>
                                     </div>
 
@@ -242,8 +245,9 @@ $hasSetExpLimit = $expLimit->hasAlreadySet();
                 <?php
                 $rem = new RemainderCard();
 
-                foreach ($remainders as $remainder)
+                foreach ($remainders as $remainder) {
                     $rem->get($remainder[0], $remainder[1], $remainder[3], $remainder[2]);
+                }
 
                 ?>
 
@@ -256,9 +260,13 @@ $hasSetExpLimit = $expLimit->hasAlreadySet();
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
 
     <script>
+        document.cookie = "alertPopup=false";
+
+
         // Adding data to modal while updating for Expenses
         $(document).ready(function() {
 
@@ -275,11 +283,10 @@ $hasSetExpLimit = $expLimit->hasAlreadySet();
                 // gets array of [expname, amnt]
                 let values = $(this).closest(".expense-data-holder").find(".data").map(
                     function() {
+
                         return this.textContent;
                     }
                 ).get();
-
-                console.log($(this));
 
                 // setting value to modal
                 $("#eid").val(eid[0]);
@@ -303,16 +310,13 @@ $hasSetExpLimit = $expLimit->hasAlreadySet();
                     return this.value;
                 }).get();
 
-                console.log($(this), rid);
-
                 // gets array of [remainderName, amnt]
                 let values = $(this).closest(".remainder-data-holder").find(".data").map(
                     function() {
                         return this.textContent;
                     }
-                ).get();
 
-                console.log(values);
+                ).get();
 
                 // setting value to modal
                 $("#rid").val(rid[0]);
@@ -325,6 +329,17 @@ $hasSetExpLimit = $expLimit->hasAlreadySet();
             });
         });
     </script>
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+    <script src="/PEMS/js/alert_collections.js"></script>
+    <script src="/PEMS/js/check_limit_exceed.js"></script>
+    <script src="/PEMS/js/check_today_remainder.js"></script>
+
+
+
+
 
 </body>
 
